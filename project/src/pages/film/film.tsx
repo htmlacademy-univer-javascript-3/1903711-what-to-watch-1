@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import AddDetails from '../../components/details-component/details-component';
 import FilmCard from '../../components/film-card/film-card';
-import FilmPageComponent from '../../components/film-component/film-component';
 import Footer from '../../components/footer/footer';
-import ReviewsComponent from '../../components/reviews/reviews';
+import TabsComponent from '../../components/tabs-component/tabs-component';
 import { TypeFilm } from '../../types/film';
 import { Reviews } from '../../types/reviews';
 
@@ -15,6 +13,7 @@ type FilmPageScreenProps = {
 
 function Film({ films, reviews }: FilmPageScreenProps): JSX.Element {
   const [userCard, setUserCard] = useState(0);
+  const [chooseTab, setChooseTab] = useState<string>('Overview');
 
   const id = Number(useParams().id);
   const film = films.find((x) => x.id === id);
@@ -84,39 +83,12 @@ function Film({ films, reviews }: FilmPageScreenProps): JSX.Element {
               <img src={ film?.posterImage } alt={ film?.name } width="218" height="327" />
             </div>
 
-            <div className="film-card__desc">
-              <nav className="film-nav film-card__nav">
-                <ul className="film-nav__list">
-                  <li className="film-nav__item film-nav__item--active">
-                    <a href="#todo" className="film-nav__link">Overview</a>
-                  </li>
-                  <li className="film-nav__item">
-                    <a href="#todo" className="film-nav__link">Details</a>
-                  </li>
-                  <li className="film-nav__item">
-                    <a href="#todo" className="film-nav__link">Reviews</a>
-                  </li>
-                </ul>
-              </nav>
-
-              <FilmPageComponent
-                rating={ film?.rating }
-                description={ film?.description }
-                scoresCount={ film?.scoresCount }
-                director={ film?.director }
-                starring={ film?.starring }
-              />
-
-              <AddDetails
-                director={ film?.director }
-                starring={ film?.starring }
-                released={ film?.released }
-                genre={ film?.genre }
-                runTime={ film?.runTime }
-              />
-
-              <ReviewsComponent reviews={ reviews }/>
-            </div>
+            <TabsComponent
+              film={ film }
+              reviews={ reviews }
+              chooseTab={ chooseTab }
+              onUpdateTab={ (tab: string) => { setChooseTab(tab);} }
+            />
           </div>
         </div>
       </section>
