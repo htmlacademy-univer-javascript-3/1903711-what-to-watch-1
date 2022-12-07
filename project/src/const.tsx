@@ -53,3 +53,5 @@ export const GENRES_LIST: TypeGenres[] = [
     id: 9
   },
 ];
+
+export const ALL_GENRES = 'All genres';

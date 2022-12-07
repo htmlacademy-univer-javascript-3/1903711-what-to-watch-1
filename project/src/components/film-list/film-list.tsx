@@ -1,26 +1,17 @@
 import { useState } from 'react';
-import { TypeFilm, TypeGenres } from '../../types/film';
+import { useAppSelector } from '../../hooks';
 import FilmCard from '../film-card/film-card';
 import Genre from '../genre/genre';
 
-type MovieListProps = {
-  films: TypeFilm[],
-  genres: TypeGenres[],
-}
-
-function FilmList({ films, genres }: MovieListProps): JSX.Element {
+function FilmList( ): JSX.Element {
   const [userCard, setUserCard] = useState(NaN);
+  const films = useAppSelector((state) => state.shownFilms);
 
   return (
     <section className="catalog">
       <h2 className="catalog__title visually-hidden">Catalog</h2>
 
-      <ul className="catalog__genres-list">
-        <li className="catalog__genres-item catalog__genres-item--active">
-          <a href="#todo"className="catalog__genres-link">All genres</a>
-        </li>
-        { genres.map((genre) => <Genre key={ genre.id } nameGenre={ genre.titleGenre }/>) }
-      </ul>
+      <Genre />
 
       <div className="catalog__films-list">
         { films.map((film) => (

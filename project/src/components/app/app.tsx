@@ -8,7 +8,7 @@ import AddReview from '../../pages/add-review/add-review';
 import MyList from '../../pages/my-list/my-list';
 import NotFound from '../../pages/not-found/not-found';
 import PrivateRoute from '../private-route/private-route';
-import { TypeFilm, TypeGenres, FavouriteFilms } from '../../types/film';
+import { TypeFilm, FavouriteFilms } from '../../types/film';
 import { Reviews } from '../../types/reviews';
 
 type AppScreenProps = {
@@ -16,12 +16,11 @@ type AppScreenProps = {
   genre: string,
   date: number,
   films: TypeFilm[],
-  genres: TypeGenres[],
   favouriteList: FavouriteFilms[],
   reviews: Reviews
 }
 
-function App({title, genre, date, films, genres, favouriteList, reviews}: AppScreenProps): JSX.Element {
+function App({title, genre, date, films, favouriteList, reviews}: AppScreenProps): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
@@ -32,8 +31,6 @@ function App({title, genre, date, films, genres, favouriteList, reviews}: AppScr
               title = { title }
               genre = { genre }
               date = { date }
-              films = { films }
-              genres = { genres }
             />
           }
         />
