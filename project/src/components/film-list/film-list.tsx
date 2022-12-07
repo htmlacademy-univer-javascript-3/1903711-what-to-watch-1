@@ -1,20 +1,23 @@
 import { useState } from 'react';
+import { NUMBER_OF_FILMS } from '../../const';
 import { useAppSelector } from '../../hooks';
 import FilmCard from '../film-card/film-card';
 import Genre from '../genre/genre';
+import ShowMoreComponent from '../show-more-component/show-more-component';
 
 function FilmList( ): JSX.Element {
   const [userCard, setUserCard] = useState(NaN);
   const films = useAppSelector((state) => state.shownFilms);
+  const [numberOfFilms, onSetNumberOfFilms] = useState(NUMBER_OF_FILMS);
 
   return (
     <section className="catalog">
       <h2 className="catalog__title visually-hidden">Catalog</h2>
 
-      <Genre />
+      <Genre onSetNumberOfFilms={ onSetNumberOfFilms }/>
 
       <div className="catalog__films-list">
-        { films.map((film) => (
+        { films.slice(0, numberOfFilms).map((film) => (
           <FilmCard
             key={ film.id }
             id={ film.id }
@@ -29,9 +32,9 @@ function FilmList( ): JSX.Element {
         ) }
       </div>
 
-      <div className="catalog__more">
-        <button className="catalog__button" type="button">Show more</button>
-      </div>
+      {
+        films.length > numberOfFilms && <ShowMoreComponent onSetNumberOfFilms={ onSetNumberOfFilms } />
+      }
     </section>
   );
 }

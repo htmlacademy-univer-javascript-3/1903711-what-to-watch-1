@@ -1,14 +1,18 @@
-import { ALL_GENRES } from '../../const';
+import { ALL_GENRES, NUMBER_OF_FILMS } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { changeGenre, getFilmsByGenre } from '../../store/action';
-import { MouseEvent, useState } from 'react';
+import { Dispatch, MouseEvent, SetStateAction, useState } from 'react';
 import { TypeFilm } from '../../types/film';
+
+type GenresProps = {
+  onSetNumberOfFilms: Dispatch<SetStateAction<number>>;
+}
 
 export const getAllGenres = (films: TypeFilm[]) => (
   [...new Set([ALL_GENRES, ...films.map((film) => film.genre)])]
 );
 
-function GenresFilter(): JSX.Element {
+function GenresFilter({onSetNumberOfFilms}: GenresProps): JSX.Element {
   const [currentGenre, setCurrentGenre] = useState(ALL_GENRES);
 
   const dispatch = useAppDispatch();
@@ -21,6 +25,7 @@ function GenresFilter(): JSX.Element {
     dispatch(changeGenre({ currentGenre: genre }));
     dispatch(getFilmsByGenre());
     setCurrentGenre(genre);
+    onSetNumberOfFilms(NUMBER_OF_FILMS);
   };
 
   return (
