@@ -55,3 +55,5 @@ export const GENRES_LIST: TypeGenres[] = [
 ];
 
 export const ALL_GENRES = 'All genres';
+
+export const NUMBER_OF_FILMS = 8;
