@@ -60,7 +60,7 @@ export const filmsList: TypeFilm[] = [
       'Denzel Washington', 'Frances McDormand', 'Bertie Carvel', 'Alex Hassell', 'Corey Hawkins'
     ],
     runTime: 105,
-    genre: 'history',
+    genre: 'History',
     released: 2021,
     isFavorite: false,
   },
@@ -81,7 +81,7 @@ export const filmsList: TypeFilm[] = [
       'Owen Wilson', 'Adrien Brody', 'Jason Schwartzman', 'Anjelica Huston'
     ],
     runTime: 91,
-    genre: 'drama',
+    genre: 'Drama',
     released: 2007,
     isFavorite: false,
   },
@@ -144,7 +144,7 @@ export const filmsList: TypeFilm[] = [
       'Tilda Swinton', 'John C. Reilly', 'Ezra Miller'
     ],
     runTime: 112,
-    genre: 'thriller',
+    genre: 'Thriller',
     released: 2011,
     isFavorite: false,
   },
