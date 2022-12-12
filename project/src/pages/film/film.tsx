@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import FilmCard from '../../components/film-card/film-card';
 import Footer from '../../components/footer/footer';
 import TabsComponent from '../../components/tabs-component/tabs-component';
+import { AppRoute } from '../../const';
 import { TypeFilm } from '../../types/film';
 import { Reviews } from '../../types/reviews';
 
@@ -14,7 +15,7 @@ type FilmPageScreenProps = {
 function Film({ films, reviews }: FilmPageScreenProps): JSX.Element {
   const [userCard, setUserCard] = useState(0);
   const [chooseTab, setChooseTab] = useState<string>('Overview');
-
+  const navigate = useNavigate();
   const id = Number(useParams().id);
   const film = films.find((x) => x.id === id);
 
@@ -58,11 +59,11 @@ function Film({ films, reviews }: FilmPageScreenProps): JSX.Element {
               </p>
 
               <div className="film-card__buttons">
-                <button className="btn btn--play film-card__button" type="button">
+                <button className="btn btn--play film-card__button" type="button" onClick={ () => {navigate(`${AppRoute.Player}/${id}`);}}>
                   <svg viewBox="0 0 19 19" width="19" height="19">
                     <use xlinkHref="#play-s"></use>
                   </svg>
-                  <Link to={`/player/${ id }`}><span>Play</span></Link>
+                  <span>Play</span>
                 </button>
                 <button className="btn btn--list film-card__button" type="button">
                   <svg viewBox="0 0 19 20" width="19" height="20">

@@ -4,9 +4,9 @@ export enum AppRoute {
     Main = '/',
     SignIn = '/login',
     MyList = '/mylist',
-    Film = '/films/:id',
-    AddReview = '/films/:id/review',
-    Player = '/player/:id'
+    Film = '/films',
+    AddReview = '/review',
+    Player = '/player'
 }
 
 export enum AuthorizationStatus {
@@ -54,6 +54,14 @@ export const GENRES_LIST: TypeGenres[] = [
   },
 ];
 
+export enum ApiRoute {
+  Films = '/films',
+  Login = '/login',
+  Logout = '/logout',
+}
+
 export const ALL_GENRES = 'All genres';
 
 export const NUMBER_OF_FILMS = 8;
+
+export const TIMEOUT_SHOW_ERROR = 2000;
