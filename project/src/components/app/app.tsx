@@ -10,6 +10,8 @@ import NotFound from '../../pages/not-found/not-found';
 import PrivateRoute from '../private-route/private-route';
 import { TypeFilm, FavouriteFilms } from '../../types/film';
 import { Reviews } from '../../types/reviews';
+import LoadingScreen from '../../pages/loading-screen/loading-screen';
+import { useAppSelector } from '../../hooks';
 
 type AppScreenProps = {
   title: string,
@@ -20,7 +22,17 @@ type AppScreenProps = {
   reviews: Reviews
 }
 
+const isCheckedAuth = (authorizationStatus: string): boolean =>
+  authorizationStatus === AuthorizationStatus.Unknown;
+
 function App({title, genre, date, films, favouriteList, reviews}: AppScreenProps): JSX.Element {
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const isDataLoaded = useAppSelector((state) => state.isDataLoaded);
+
+  if (isCheckedAuth(authorizationStatus) || isDataLoaded) {
+    return ( <LoadingScreen /> );
+  }
+
   return (
     <BrowserRouter>
       <Routes>
@@ -38,18 +50,22 @@ function App({title, genre, date, films, favouriteList, reviews}: AppScreenProps
           path={AppRoute.SignIn}
           element={<SignIn />}
         />
+        <Route path={AppRoute.Film}>
+          <Route
+            path={':id'}
+            element={<Film films={ films } reviews={ reviews } /> }
+          />
+        </Route>
+        <Route path={AppRoute.Player}>
+          <Route
+            path={':id'}
+            element={<Player />}
+          />
+        </Route>
         <Route
-          path={AppRoute.Film}
-          element={<Film films={ films } reviews={ reviews } />}
-        />
-        <Route
-          path={AppRoute.Player}
-          element={<Player />}
-        />
-        <Route
-          path={AppRoute.AddReview}
+          path={`:id${AppRoute.AddReview}`}
           element={
-            <PrivateRoute authorizationStatus={AuthorizationStatus.NoAuth}>
+            <PrivateRoute authorizationStatus={ authorizationStatus }>
               <AddReview />
             </PrivateRoute>
           }
@@ -57,7 +73,7 @@ function App({title, genre, date, films, favouriteList, reviews}: AppScreenProps
         <Route
           path={AppRoute.MyList}
           element={
-            <PrivateRoute authorizationStatus={AuthorizationStatus.NoAuth}>
+            <PrivateRoute authorizationStatus={ authorizationStatus }>
               <MyList myList={ favouriteList } />
             </PrivateRoute>
           }
