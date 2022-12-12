@@ -2,9 +2,9 @@ import { AxiosInstance } from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, State } from '../types/state.js';
 import { TypeFilm } from '../types/film.js';
-import { loadFilms, requireAuthorization, setDataLoadedStatus } from './action';
+import { loadFilms, redirectToRoute, requireAuthorization, setAvatar, setDataLoadedStatus } from './action';
 import { saveToken, dropToken } from '../services/token';
-import { ApiRoute, AuthorizationStatus } from '../const';
+import { ApiRoute, AppRoute, AuthorizationStatus } from '../const';
 import { AuthData, UserData } from '../types/data';
 import { processErrorHandle } from '../services/process-error-handle';
 
@@ -51,9 +51,11 @@ export const loginAction = createAsyncThunk<void, AuthData, {
   'user/login',
   async ({email, password}, {dispatch, extra: api}) => {
     try {
-      const {data: {token}} = await api.post<UserData>(ApiRoute.Login, {email, password});
+      const {data: {token, avatarUrl}} = await api.post<UserData>(ApiRoute.Login, {email, password});
       saveToken(token);
+      dispatch(setAvatar(avatarUrl));
       dispatch(requireAuthorization(AuthorizationStatus.Auth));
+      dispatch(redirectToRoute(AppRoute.Main));
     } catch {
       processErrorHandle('Не выполнить вход');
       throw new Error();
@@ -71,5 +73,7 @@ export const logoutAction = createAsyncThunk<void, undefined, {
     await api.delete(ApiRoute.Logout);
     dropToken();
     dispatch(requireAuthorization(AuthorizationStatus.NoAuth));
+    dispatch(setAvatar(null));
+    dispatch(redirectToRoute(AppRoute.Main));
   },
 );

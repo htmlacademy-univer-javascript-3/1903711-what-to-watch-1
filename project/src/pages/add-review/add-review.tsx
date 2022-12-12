@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import AddReviewComponent from '../../components/add-review-component/add-review-component';
+import UserBlock from '../../components/user-block/user-block';
 
 function AddReview(): JSX.Element {
   return (
@@ -31,16 +32,7 @@ function AddReview(): JSX.Element {
             </ul>
           </nav>
 
-          <ul className="user-block">
-            <li className="user-block__item">
-              <div className="user-block__avatar">
-                <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
-              </div>
-            </li>
-            <li className="user-block__item">
-              <a href="#todo" className="user-block__link">Sign out</a>
-            </li>
-          </ul>
+          <UserBlock />
         </header>
 
         <div className="film-card__poster film-card__poster--small">

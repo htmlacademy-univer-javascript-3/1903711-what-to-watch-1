@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { ALL_GENRES, AuthorizationStatus, NUMBER_OF_FILMS } from '../const';
-import { changeGenre, resetMainScreen, loadFilms, requireAuthorization, getFilmsByGenre, setError, setDataLoadedStatus } from './action';
+import { changeGenre, resetMainScreen, loadFilms, requireAuthorization, getFilmsByGenre, setError, setDataLoadedStatus, setAvatar } from './action';
 import { TypeFilm } from '../types/film';
 
 export const sortFilmsByGenre = (films: TypeFilm[], genre: string) => {
@@ -17,7 +17,8 @@ type InitialState = {
   shownFilms: TypeFilm[],
   authorizationStatus: string,
   error: string | null,
-  isDataLoaded: boolean
+  isDataLoaded: boolean,
+  avatar: string | null
 }
 
 const initialState: InitialState = {
@@ -27,7 +28,8 @@ const initialState: InitialState = {
   shownCount: 0,
   authorizationStatus:  AuthorizationStatus.Unknown,
   error: null,
-  isDataLoaded: false
+  isDataLoaded: false,
+  avatar: null
 };
 
 export const reducer = createReducer(initialState, (builder) => {
@@ -54,6 +56,9 @@ export const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(setError, (state, action) => {
       state.error = action.payload;
+    })
+    .addCase(setAvatar, (state, action) => {
+      state.avatar = action.payload;
     })
     .addCase(setDataLoadedStatus, (state, action) => {
       state.isDataLoaded = action.payload;
