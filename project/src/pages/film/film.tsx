@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import FilmCard from '../../components/film-card/film-card';
 import Footer from '../../components/footer/footer';
 import TabsComponent from '../../components/tabs-component/tabs-component';
+import UserBlock from '../../components/user-block/user-block';
 import { AppRoute } from '../../const';
 import { TypeFilm } from '../../types/film';
 import { Reviews } from '../../types/reviews';
@@ -38,16 +39,7 @@ function Film({ films, reviews }: FilmPageScreenProps): JSX.Element {
               </Link>
             </div>
 
-            <ul className="user-block">
-              <li className="user-block__item">
-                <div className="user-block__avatar">
-                  <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
-                </div>
-              </li>
-              <li className="user-block__item">
-                <a href="#todo" className="user-block__link">Sign out</a>
-              </li>
-            </ul>
+            <UserBlock />
           </header>
 
           <div className="film-card__wrap">

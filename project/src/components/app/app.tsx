@@ -1,5 +1,5 @@
 import {AppRoute, AuthorizationStatus } from '../../const';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Main from '../../pages/main/main';
 import SignIn from '../../pages/sign-in/sign-in';
 import Film from '../../pages/film/film';
@@ -12,6 +12,8 @@ import { TypeFilm, FavouriteFilms } from '../../types/film';
 import { Reviews } from '../../types/reviews';
 import LoadingScreen from '../../pages/loading-screen/loading-screen';
 import { useAppSelector } from '../../hooks';
+import browserHistory from '../../browser-history';
+import HistoryRouter from '../history-router/history-router';
 
 type AppScreenProps = {
   title: string,
@@ -34,7 +36,7 @@ function App({title, genre, date, films, favouriteList, reviews}: AppScreenProps
   }
 
   return (
-    <BrowserRouter>
+    <HistoryRouter history={ browserHistory }>
       <Routes>
         <Route
           path={AppRoute.Main}
@@ -83,7 +85,7 @@ function App({title, genre, date, films, favouriteList, reviews}: AppScreenProps
           element={<NotFound />}
         />
       </Routes>
-    </BrowserRouter>
+    </HistoryRouter>
   );
 }
 
