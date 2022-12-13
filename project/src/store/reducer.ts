@@ -1,7 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { ALL_GENRES, AuthorizationStatus, NUMBER_OF_FILMS } from '../const';
-import { changeGenre, resetMainScreen, loadFilms, requireAuthorization, getFilmsByGenre, setError, setDataLoadedStatus, setAvatar } from './action';
-import { TypeFilm } from '../types/film';
+import { changeGenre, resetMainScreen, loadFilms, requireAuthorization, getFilmsByGenre, setError, setDataLoadedStatus, setAvatar, loadSimilar, loadComments, loadFilm, changeFilmTab } from './action';
+import { SimilarFilm, TypeFilm } from '../types/film';
+import { Comments } from '../types/comments';
 
 export const sortFilmsByGenre = (films: TypeFilm[], genre: string) => {
   if(genre === ALL_GENRES) {
@@ -19,6 +20,10 @@ type InitialState = {
   error: string | null,
   isDataLoaded: boolean,
   avatar: string | null
+  comments: Comments,
+  similar: SimilarFilm,
+  film: TypeFilm | null,
+  filmPageTab: string
 }
 
 const initialState: InitialState = {
@@ -29,7 +34,11 @@ const initialState: InitialState = {
   authorizationStatus:  AuthorizationStatus.Unknown,
   error: null,
   isDataLoaded: false,
-  avatar: null
+  avatar: null,
+  comments: [],
+  similar: [],
+  film: null,
+  filmPageTab: 'Overview'
 };
 
 export const reducer = createReducer(initialState, (builder) => {
@@ -39,7 +48,7 @@ export const reducer = createReducer(initialState, (builder) => {
 
       state.currentGenre = action.payload.currentGenre;
       state.shownFilms = shownFilms;
-      state.shownCount = shownFilms.length < NUMBER_OF_FILMS ? shownFilms.length : 8;
+      state.shownCount = shownFilms.length < NUMBER_OF_FILMS ? shownFilms.length : NUMBER_OF_FILMS;
     })
     .addCase(resetMainScreen, (state) => {
       state.currentGenre = ALL_GENRES;
@@ -54,6 +63,9 @@ export const reducer = createReducer(initialState, (builder) => {
       state.shownFilms = action.payload;
       state.shownCount = NUMBER_OF_FILMS;
     })
+    .addCase(changeFilmTab, (state, action) => {
+      state.filmPageTab = action.payload;
+    })
     .addCase(setError, (state, action) => {
       state.error = action.payload;
     })
@@ -62,6 +74,15 @@ export const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(setDataLoadedStatus, (state, action) => {
       state.isDataLoaded = action.payload;
+    })
+    .addCase(loadFilm, (state, action) => {
+      state.film = action.payload;
+    })
+    .addCase(loadComments, (state, action) => {
+      state.comments = action.payload;
+    })
+    .addCase(loadSimilar, (state, action) => {
+      state.similar = action.payload;
     })
     .addCase(requireAuthorization, (state, action) => {
       state.authorizationStatus = action.payload;

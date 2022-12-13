@@ -58,6 +58,8 @@ export enum ApiRoute {
   Films = '/films',
   Login = '/login',
   Logout = '/logout',
+  Similar = '/similar',
+  Comments = '/comments'
 }
 
 export const ALL_GENRES = 'All genres';
