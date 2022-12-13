@@ -6,7 +6,7 @@ import ReviewsComponent from '../reviews/reviews';
 
 
 type TabsComponentProps = {
-  film?: TypeFilm,
+  film?: TypeFilm | null,
   reviews: Reviews,
   chooseTab: string,
   onUpdateTab: (tab: string) => void

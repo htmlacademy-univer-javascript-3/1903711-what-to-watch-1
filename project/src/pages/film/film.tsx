@@ -1,24 +1,43 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import FilmCard from '../../components/film-card/film-card';
 import Footer from '../../components/footer/footer';
+import SimilarFilmComponent from '../../components/similar-film-component/similar-film-component';
 import TabsComponent from '../../components/tabs-component/tabs-component';
 import UserBlock from '../../components/user-block/user-block';
-import { AppRoute } from '../../const';
-import { TypeFilm } from '../../types/film';
-import { Reviews } from '../../types/reviews';
+import { AppRoute, AuthorizationStatus } from '../../const';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { setDataLoadedStatus } from '../../store/action';
+import { fetchCommentsByID, fetchFilmByID, fetchSimilarByID } from '../../store/api-actions';
+import LoadingScreen from '../loading-screen/loading-screen';
+import NotFound from '../not-found/not-found';
 
-type FilmPageScreenProps = {
-  films: TypeFilm[],
-  reviews: Reviews
-}
-
-function Film({ films, reviews }: FilmPageScreenProps): JSX.Element {
-  const [userCard, setUserCard] = useState(0);
+function Film(): JSX.Element {
   const [chooseTab, setChooseTab] = useState<string>('Overview');
   const navigate = useNavigate();
   const id = Number(useParams().id);
-  const film = films.find((x) => x.id === id);
+  const film = useAppSelector((state) => state.film);
+  const comments = useAppSelector((state) => state.comments);
+  const similar = useAppSelector((state) => state.similar);
+  const authStatus = useAppSelector((state) => state.authorizationStatus);
+  const loadStatus = useAppSelector((state) => state.isDataLoaded);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(setDataLoadedStatus(true));
+    dispatch(fetchFilmByID(id.toString()));
+    dispatch(fetchCommentsByID(id.toString()));
+    dispatch(fetchSimilarByID(id.toString()));
+    dispatch(setDataLoadedStatus(false));
+  }, [id, dispatch]);
+
+  if (loadStatus) {
+    return(<LoadingScreen />);
+  }
+
+  if (!film) {
+    return(<NotFound />);
+  }
 
   return (
     <>
@@ -64,7 +83,8 @@ function Film({ films, reviews }: FilmPageScreenProps): JSX.Element {
                   <span>My list</span>
                   <span className="film-card__count">9</span>
                 </button>
-                <Link className="btn film-card__button" to={`/films/:${ id }/review`}>Add review</Link>
+                { authStatus === AuthorizationStatus.Auth &&
+                  <Link to={`${AppRoute.Film}/${id}${AppRoute.AddReview}`} className="btn film-card__button">Add review</Link>}
               </div>
             </div>
           </div>
@@ -78,7 +98,7 @@ function Film({ films, reviews }: FilmPageScreenProps): JSX.Element {
 
             <TabsComponent
               film={ film }
-              reviews={ reviews }
+              reviews={ comments }
               chooseTab={ chooseTab }
               onUpdateTab={ (tab: string) => { setChooseTab(tab);} }
             />
@@ -87,20 +107,7 @@ function Film({ films, reviews }: FilmPageScreenProps): JSX.Element {
       </section>
 
       <div className="page-content">
-        <section className="catalog catalog--like-this">
-          <h2 className="catalog__title">More like this</h2>
-
-          <div className="catalog__films-list">
-            { films.map((movie) => (
-              <FilmCard
-                key={ movie.id } id={ movie.id } name={ movie.name } previewImage={ movie.previewImage } activeCard={ movie.id === userCard } previewVideo={ movie.previewVideoLink }
-                onMouseOver={ () => {
-                  setUserCard(movie.id);
-                } }
-              />)
-            ) }
-          </div>
-        </section>
+        <SimilarFilmComponent similar={similar} />
         <Footer />
       </div>
     </>

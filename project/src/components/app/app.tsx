@@ -8,8 +8,7 @@ import AddReview from '../../pages/add-review/add-review';
 import MyList from '../../pages/my-list/my-list';
 import NotFound from '../../pages/not-found/not-found';
 import PrivateRoute from '../private-route/private-route';
-import { TypeFilm, FavouriteFilms } from '../../types/film';
-import { Reviews } from '../../types/reviews';
+import { FavouriteFilms } from '../../types/film';
 import LoadingScreen from '../../pages/loading-screen/loading-screen';
 import { useAppSelector } from '../../hooks';
 import browserHistory from '../../browser-history';
@@ -19,15 +18,13 @@ type AppScreenProps = {
   title: string,
   genre: string,
   date: number,
-  films: TypeFilm[],
   favouriteList: FavouriteFilms[],
-  reviews: Reviews
 }
 
 const isCheckedAuth = (authorizationStatus: string): boolean =>
   authorizationStatus === AuthorizationStatus.Unknown;
 
-function App({title, genre, date, films, favouriteList, reviews}: AppScreenProps): JSX.Element {
+function App({title, genre, date, favouriteList}: AppScreenProps): JSX.Element {
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const isDataLoaded = useAppSelector((state) => state.isDataLoaded);
 
@@ -55,7 +52,7 @@ function App({title, genre, date, films, favouriteList, reviews}: AppScreenProps
         <Route path={AppRoute.Film}>
           <Route
             path={':id'}
-            element={<Film films={ films } reviews={ reviews } /> }
+            element={<Film /> }
           />
         </Route>
         <Route path={AppRoute.Player}>
@@ -64,14 +61,16 @@ function App({title, genre, date, films, favouriteList, reviews}: AppScreenProps
             element={<Player />}
           />
         </Route>
-        <Route
-          path={`:id${AppRoute.AddReview}`}
-          element={
-            <PrivateRoute authorizationStatus={ authorizationStatus }>
-              <AddReview />
-            </PrivateRoute>
-          }
-        />
+        <Route path={AppRoute.Film}>
+          <Route
+            path={`:id${AppRoute.AddReview}`}
+            element={
+              <PrivateRoute authorizationStatus={ authorizationStatus }>
+                <AddReview />
+              </PrivateRoute>
+            }
+          />
+        </Route>
         <Route
           path={AppRoute.MyList}
           element={

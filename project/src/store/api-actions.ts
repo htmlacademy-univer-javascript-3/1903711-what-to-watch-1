@@ -1,12 +1,13 @@
 import { AxiosInstance } from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, State } from '../types/state.js';
-import { TypeFilm } from '../types/film.js';
-import { loadFilms, redirectToRoute, requireAuthorization, setAvatar, setDataLoadedStatus } from './action';
+import { SimilarFilm, TypeFilm } from '../types/film.js';
+import { loadComments, loadFilm, loadFilms, loadSimilar, redirectToRoute, requireAuthorization, setAvatar, setDataLoadedStatus } from './action';
 import { saveToken, dropToken } from '../services/token';
 import { ApiRoute, AppRoute, AuthorizationStatus } from '../const';
 import { AuthData, UserData } from '../types/data';
 import { processErrorHandle } from '../services/process-error-handle';
+import { Comments, UserComment } from '../types/comments.js';
 
 export const fetchFilmAction = createAsyncThunk<void, undefined, {
   dispatch: AppDispatch,
@@ -75,5 +76,75 @@ export const logoutAction = createAsyncThunk<void, undefined, {
     dispatch(requireAuthorization(AuthorizationStatus.NoAuth));
     dispatch(setAvatar(null));
     dispatch(redirectToRoute(AppRoute.Main));
+  },
+);
+
+export const fetchFilmByID = createAsyncThunk<void, string, {
+  dispatch: AppDispatch,
+  state: State,
+  extra: AxiosInstance
+}>(
+  'data/fetchFilmById',
+  async (filmId: string, {dispatch, extra: api}) => {
+    try {
+      const {data} = await api.get<TypeFilm>(`${ApiRoute.Films}/${filmId}`);
+      dispatch(loadFilm(data));
+    } catch {
+      processErrorHandle('Не удалось загрузить фильм');
+      throw new Error();
+    }
+  },
+);
+
+export const fetchCommentsByID = createAsyncThunk<void, string, {
+  dispatch: AppDispatch,
+  state: State,
+  extra: AxiosInstance
+}>(
+  'data/fetchCommentsById',
+  async (filmId: string, {dispatch, extra: api}) => {
+    try {
+      const {data} = await api.get<Comments>(`${ApiRoute.Comments}/${filmId}`);
+      dispatch(loadComments(data));
+    } catch {
+      processErrorHandle('Не удалось загрузить комментарии к фильму');
+      throw new Error();
+    }
+  },
+);
+
+export const fetchSimilarByID = createAsyncThunk<void, string, {
+  dispatch: AppDispatch,
+  state: State,
+  extra: AxiosInstance
+}>(
+  'data/fetchSimilarById',
+  async (filmId: string, {dispatch, extra: api}) => {
+    try {
+      const {data} = await api.get<SimilarFilm>(`${ApiRoute.Films}/${filmId}${ApiRoute.Similar}`);
+      dispatch(loadSimilar(data));
+    } catch {
+      processErrorHandle('Не удалось загрузить похожие фильмы');
+      throw new Error();
+    }
+  },
+);
+
+export const postComment = createAsyncThunk<void, UserComment, {
+  dispatch: AppDispatch,
+  state: State,
+  extra: AxiosInstance
+}>(
+  'data/postCommentById',
+  async ({comment, rating, filmId}, {dispatch, extra: api}) => {
+    try {
+      dispatch(setDataLoadedStatus(true));
+      await api.post<UserComment>(`${ApiRoute.Comments}/${filmId}`, {comment, rating});
+      dispatch(redirectToRoute(`${ApiRoute.Films}/${filmId}`));
+      dispatch(setDataLoadedStatus(false));
+    } catch {
+      processErrorHandle('Не удалось отправить комментарий');
+      throw new Error();
+    }
   },
 );
