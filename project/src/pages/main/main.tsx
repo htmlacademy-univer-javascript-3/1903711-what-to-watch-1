@@ -1,17 +1,25 @@
-import Footer from '../../components/footer/footer';
+import PromoCard from '../../components/promo-card/promo-card';
 import FilmList from '../../components/film-list/film-list';
-import MainComponent from '../../components/main-component/main-component';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {useEffect} from 'react';
+import {getAuthorizationStatus} from '../../store/user-process/selectors';
+import {AuthorizationStatus} from '../../const';
+import {fetchFavoriteFilmsAction} from '../../store/api-actions';
+import Footer from '../../components/footer/footer';
 
-type MainProps = {
-    title: string,
-    genre: string,
-    date: number,
-}
+function Main(): JSX.Element {
+  const dispatch = useAppDispatch();
+  const authStatus = useAppSelector(getAuthorizationStatus);
 
-function Main({title, genre, date}: MainProps): JSX.Element {
+  useEffect(() => {
+    if (authStatus === AuthorizationStatus.Auth) {
+      dispatch(fetchFavoriteFilmsAction());
+    }
+  }, [authStatus, dispatch]);
+
   return (
     <>
-      <MainComponent title={ title } genre={ genre } date={ date } />
+      <PromoCard />
 
       <div className="page-content">
         <FilmList />
