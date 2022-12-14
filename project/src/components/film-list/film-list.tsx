@@ -1,40 +1,35 @@
-import { useState } from 'react';
-import { NUMBER_OF_FILMS } from '../../const';
-import { useAppSelector } from '../../hooks';
-import FilmCard from '../film-card/film-card';
-import Genre from '../genre/genre';
-import ShowMoreComponent from '../show-more-component/show-more-component';
+import {useAppSelector} from '../../hooks';
 
-function FilmList( ): JSX.Element {
-  const [userCard, setUserCard] = useState(NaN);
-  const films = useAppSelector((state) => state.shownFilms);
-  const [numberOfFilms, onSetNumberOfFilms] = useState(NUMBER_OF_FILMS);
+import GenresFilter from '../genres-filter/genres-filter';
+import FilmCard from '../film-card/film-card';
+import ShowMoreButton from '../show-more-button/show-more-button';
+import {getCardCount, getFilteredFilms} from '../../store/main-data/selectors';
+
+function FilmList(): JSX.Element {
+
+  const films = useAppSelector(getFilteredFilms);
+  const cardCount = useAppSelector(getCardCount);
 
   return (
     <section className="catalog">
       <h2 className="catalog__title visually-hidden">Catalog</h2>
 
-      <Genre onSetNumberOfFilms={ onSetNumberOfFilms }/>
+      <GenresFilter />
 
       <div className="catalog__films-list">
-        { films.slice(0, numberOfFilms).map((film) => (
+        {films.slice(0, cardCount).map((film) => (
           <FilmCard
-            key={ film.id }
-            id={ film.id }
-            name={ film.name }
-            previewImage={ film.previewImage }
-            activeCard={ film.id === userCard }
-            previewVideo={ film.previewVideoLink }
-            onMouseOver={ (pointedId: number) => {
-              setUserCard(pointedId);
-            }}
-          />)
-        ) }
+            key={film.id}
+            id={film.id}
+
+            title={film.name}
+            image={film.previewImage}
+            previewVideo={film.previewVideoLink}
+
+          />))}
       </div>
 
-      {
-        films.length > numberOfFilms && <ShowMoreComponent onSetNumberOfFilms={ onSetNumberOfFilms } />
-      }
+      <ShowMoreButton isAllCardsLoaded={cardCount !== films.length}/>
     </section>
   );
 }

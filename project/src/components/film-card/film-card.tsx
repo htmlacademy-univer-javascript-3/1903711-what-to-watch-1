@@ -1,27 +1,44 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { AppRoute } from '../../const';
 import { useAppDispatch } from '../../hooks';
-import { resetMainScreen } from '../../store/action';
-import VideoPlayerComponent from '../video-player-component/video-player-component';
+import { resetMainScreen } from '../../store/main-data/main-data';
+import PreviewPlayer from '../preview-player/preview-player';
 
-type FilmCardType = {
+type FilmCardProps = {
   id: number,
-  name: string;
-  previewImage: string,
-  previewVideo: string,
-  onMouseOver: (id: number) => void,
-  activeCard: boolean
+  title: string,
+  image: string,
+  previewVideo: string
 }
 
-function FilmCard({id, name, previewImage, activeCard, previewVideo, onMouseOver}: FilmCardType): JSX.Element {
+function FilmCard(props: FilmCardProps): JSX.Element {
+  const {id, title, image, previewVideo} = props;
+
+  const [isPointed, setIsPointed] = useState(false);
   const dispatch = useAppDispatch();
+
   return (
-    <article className="small-film-card catalog__films-card" onMouseEnter={() => onMouseOver(id)} onMouseLeave={() => onMouseOver(NaN)} >
+    <article
+      className="small-film-card catalog__films-card"
+      onMouseEnter={() => setIsPointed(true)}
+      onMouseLeave={() => setIsPointed(false)}
+    >
       <div className="small-film-card__image">
-        { activeCard ? <VideoPlayerComponent previewVideo={ previewVideo } srcImage={ previewImage } /> : <img src={ previewImage } alt={ name } width="280" height="175" /> }
+        {
+          isPointed ? <PreviewPlayer image={image} previewVideo={previewVideo} />
+            : <img src={image} alt={title} width="280" height="175"/>
+        }
       </div>
       <h3 className="small-film-card__title">
-        <Link className="small-film-card__link" to={`/films/${ id }`} onClick={() => (dispatch(resetMainScreen()))}>
-          { name }
+        <Link
+          className="small-film-card__link"
+          to={`${AppRoute.Film}/${id}`}
+          onClick={() => {
+            dispatch(resetMainScreen());
+          }}
+        >
+          {title}
         </Link>
       </h3>
     </article>

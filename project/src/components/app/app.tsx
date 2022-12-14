@@ -1,4 +1,3 @@
-import {AppRoute, AuthorizationStatus } from '../../const';
 import { Route, Routes } from 'react-router-dom';
 import Main from '../../pages/main/main';
 import SignIn from '../../pages/sign-in/sign-in';
@@ -8,28 +7,21 @@ import AddReview from '../../pages/add-review/add-review';
 import MyList from '../../pages/my-list/my-list';
 import NotFound from '../../pages/not-found/not-found';
 import PrivateRoute from '../private-route/private-route';
-import { FavouriteFilms } from '../../types/film';
 import LoadingScreen from '../../pages/loading-screen/loading-screen';
 import { useAppSelector } from '../../hooks';
-import browserHistory from '../../browser-history';
+import { isCheckedAuth } from '../../utils/check-auth';
+import { getAuthorizationStatus } from '../../store/user-process/selectors';
 import HistoryRouter from '../history-router/history-router';
+import { AppRoute } from '../../const';
+import browserHistory from '../../browser-history';
 
-type AppScreenProps = {
-  title: string,
-  genre: string,
-  date: number,
-  favouriteList: FavouriteFilms[],
-}
+function App(): JSX.Element {
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
 
-const isCheckedAuth = (authorizationStatus: string): boolean =>
-  authorizationStatus === AuthorizationStatus.Unknown;
-
-function App({title, genre, date, favouriteList}: AppScreenProps): JSX.Element {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const isDataLoaded = useAppSelector((state) => state.isDataLoaded);
-
-  if (isCheckedAuth(authorizationStatus) || isDataLoaded) {
-    return ( <LoadingScreen /> );
+  if (isCheckedAuth(authorizationStatus)) {
+    return (
+      <LoadingScreen />
+    );
   }
 
   return (
@@ -37,24 +29,20 @@ function App({title, genre, date, favouriteList}: AppScreenProps): JSX.Element {
       <Routes>
         <Route
           path={AppRoute.Main}
-          element={
-            <Main
-              title = { title }
-              genre = { genre }
-              date = { date }
-            />
-          }
+          element={<Main />}
         />
         <Route
           path={AppRoute.SignIn}
           element={<SignIn />}
         />
-        <Route path={AppRoute.Film}>
-          <Route
-            path={':id'}
-            element={<Film /> }
-          />
-        </Route>
+        <Route
+          path={AppRoute.MyList}
+          element={
+            <PrivateRoute authorizationStatus={ authorizationStatus }>
+              <MyList />
+            </PrivateRoute>
+          }
+        />
         <Route path={AppRoute.Player}>
           <Route
             path={':id'}
@@ -63,24 +51,22 @@ function App({title, genre, date, favouriteList}: AppScreenProps): JSX.Element {
         </Route>
         <Route path={AppRoute.Film}>
           <Route
+            path={':id'}
+            element={<Film />}
+          >
+          </Route>
+          <Route
             path={`:id${AppRoute.AddReview}`}
             element={
               <PrivateRoute authorizationStatus={ authorizationStatus }>
                 <AddReview />
               </PrivateRoute>
             }
-          />
+          >
+          </Route>
         </Route>
         <Route
-          path={AppRoute.MyList}
-          element={
-            <PrivateRoute authorizationStatus={ authorizationStatus }>
-              <MyList myList={ favouriteList } />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="*"
+          path={'*'}
           element={<NotFound />}
         />
       </Routes>

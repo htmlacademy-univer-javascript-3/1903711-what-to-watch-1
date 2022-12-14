@@ -1,27 +1,26 @@
-import { Link, useParams } from 'react-router-dom';
-import { useEffect } from 'react';
-import AddReviewComponent from '../../components/add-review-component/add-review-component';
+import Logo from '../../components/logo/logo';
+import ReviewForm from '../../components/review-form/review-form';
+import {AppRoute} from '../../const';
+import {Link, useParams} from 'react-router-dom';
 import UserBlock from '../../components/user-block/user-block';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { setDataLoadedStatus } from '../../store/action';
-import { fetchFilmByID } from '../../store/api-actions';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {useEffect} from 'react';
+import {fetchFilmByID} from '../../store/api-actions';
 import LoadingScreen from '../loading-screen/loading-screen';
-import { AppRoute } from '../../const';
+import {getLoadedDataStatus} from '../../store/main-data/selectors';
+import {getFilm} from '../../store/film-data/selectors';
 
 function AddReview(): JSX.Element {
   const id = Number(useParams().id);
 
-  const film = useAppSelector((state) => state.film);
-  const loadStatus = useAppSelector((state) => state.isDataLoaded);
+  const film = useAppSelector(getFilm);
+  const loadStatus = useAppSelector(getLoadedDataStatus);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(setDataLoadedStatus(true));
     dispatch(fetchFilmByID(id.toString()));
-    dispatch(setDataLoadedStatus(false));
   }, [id, dispatch]);
-
 
   if (loadStatus) {
     return(<LoadingScreen />);
@@ -31,19 +30,13 @@ function AddReview(): JSX.Element {
     <section className="film-card film-card--full">
       <div className="film-card__header">
         <div className="film-card__bg">
-          <img src={film?.backgroundImage} alt={film?.name} />
+          <img src={film?.backgroundImage} alt={film?.name}/>
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
 
         <header className="page-header">
-          <div className="logo">
-            <Link to="/" className="logo__link">
-              <span className="logo__letter logo__letter--1">W</span>
-              <span className="logo__letter logo__letter--2">T</span>
-              <span className="logo__letter logo__letter--3">W</span>
-            </Link>
-          </div>
+          <Logo isLightVersion={false}/>
 
           <nav className="breadcrumbs">
             <ul className="breadcrumbs__list">
@@ -57,16 +50,14 @@ function AddReview(): JSX.Element {
               </li>
             </ul>
           </nav>
-
           <UserBlock />
         </header>
 
         <div className="film-card__poster film-card__poster--small">
-          <img src={film?.posterImage} alt={film?.name} width="218" height="327" />
+          <img src={film?.posterImage} alt={film?.name} width="218" height="327"/>
         </div>
       </div>
-
-      <AddReviewComponent />
+      <ReviewForm />
 
     </section>
   );
