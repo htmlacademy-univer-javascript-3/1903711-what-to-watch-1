@@ -20,11 +20,9 @@ function FilmList(): JSX.Element {
           <FilmCard
             key={film.id}
             id={film.id}
-
             title={film.name}
             image={film.previewImage}
             previewVideo={film.previewVideoLink}
-
           />))}
       </div>
 

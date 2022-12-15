@@ -1,14 +1,9 @@
-import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
-import { useEffect, useState } from 'react';
+import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import PlayerFullScreen from '../../components/player-full-screen/player-full-screen';
-import PlayerPause from '../../components/player-pause/player-pause';
-import PlayerPlay from '../../components/player-play/player-play';
-import VideoPlayer from '../../components/video-player/video-player';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchFilmByID } from '../../store/api-actions';
 import { getFilm, getIsFilmFoundStatus, getIsFilmLoadingStatus } from '../../store/film-data/selectors';
+import { resetMainScreen } from '../../store/main-data/main-data';
 import LoadingScreen from '../loading-screen/loading-screen';
 import NotFound from '../not-found/not-found';
 
@@ -16,26 +11,51 @@ function Player(): JSX.Element {
   const id = Number(useParams().id);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [isPlay, setIsPlay] = useState(true);
-
-  dayjs.extend(duration);
-
+  const player = useRef() as MutableRefObject<HTMLVideoElement>;
   const film = useAppSelector(getFilm);
-
   const isFilmFoundStatus = useAppSelector(getIsFilmFoundStatus);
   const isFilmLoadingStatus = useAppSelector(getIsFilmLoadingStatus);
+  const [videoFullTime, setVideoTime] = useState(0);
+  const [videoCurrentTime, setVideoCurrentTime] = useState(0);
+  const [videoProgress, setVideoProgress] = useState(0);
+  const [playing, setPlaying] = useState(false);
 
-  const handleClickExitButton = () => {
+  const getVideoTimeLeft = (fullTime: number, currentTime: number) => {
+    const timeLeft = fullTime - currentTime;
+    return `${Math.floor(timeLeft / 60)}:${(`0${Math.floor(timeLeft % 60)}`).slice(-2)}`;
+  };
+
+  const exitPlayer = () => {
+    dispatch(resetMainScreen());
     navigate(-1);
   };
 
-  const handleClickPlayButton = () => {
-    setIsPlay(true);
+  const handleClickPlay = () => {
+    player.current.play();
+    setPlaying(true);
   };
 
-  const handleClickPauseButton = () => {
-    setIsPlay(false);
+  const handleClickPause = () => {
+    player.current.pause();
+    setPlaying(false);
   };
+
+  const handleClickFullScreen = () => {
+    player.current.requestFullscreen();
+  };
+
+  if(player.current) {
+    player.current.ontimeupdate = () => {
+      setVideoCurrentTime(player.current?.currentTime);
+      setVideoProgress((player.current?.currentTime / videoFullTime) * 100);
+    };
+  }
+
+  useEffect(() => {
+    if(player.current) {
+      setVideoTime(player.current.duration);
+    }
+  }, [playing]);
 
   useEffect(() => {
     dispatch(fetchFilmByID(id.toString()));
@@ -51,34 +71,44 @@ function Player(): JSX.Element {
 
   return (
     <div className="player">
-      <VideoPlayer isMute={false} isPlay={isPlay} poster={film?.previewImage || ''} src={film?.videoLink || ''} />
+      <video ref={player} autoPlay src={film?.videoLink} id="video" className="player__video" poster={film?.backgroundImage} onPlay={() => setPlaying(true)}></video>
 
-      <button type="button" className="player__exit" onClick={ handleClickExitButton }>Exit</button>
+      <button type="button" className="player__exit" onClick={ exitPlayer }>Exit</button>
 
       <div className="player__controls">
         <div className="player__controls-row">
           <div className="player__time">
-            <progress className="player__progress" value="0" max="100"></progress>
-            <div className="player__toggler" style={{left: '0%'}}>Toggler</div>
+            <progress className="player__progress" value={videoProgress} max="100"></progress>
+            <div className="player__toggler" style={{left: `${videoProgress}%`}}>Toggler</div>
           </div>
-          <div className="player__time-value">
-            {
-              dayjs
-                .duration(film?.runTime || 0, 'minutes')
-                .format(`${film?.runTime || 0 > 60 ? 'H[:]m[:]ss' : 'm'}`)
-            }
-          </div>
+          <div className="player__time-value">-0{videoFullTime && videoCurrentTime ? getVideoTimeLeft(videoFullTime, videoCurrentTime) : '0:00:00'}</div>
         </div>
 
         <div className="player__controls-row">
-          {
-            isPlay
-              ? <PlayerPause onClick={ handleClickPauseButton }/>
-              : <PlayerPlay onClick={ handleClickPlayButton }/>
-          }
-          <div className="player__name">Transpotting</div>
+          {playing ? (
+            <button type="button" className="player__play" onClick={handleClickPause}>
+              <svg viewBox="0 0 14 21" width="14" height="21">
+                <use xlinkHref="#pause"></use>
+              </svg>
+              <span>Pause</span>
+            </button>
+          ) : (
+            <button type="button" className="player__play" onClick={handleClickPlay}>
+              <svg viewBox="0 0 19 19" width="19" height="19">
+                <use xlinkHref="#play-s"></use>
+              </svg>
+              <span>Play</span>
+            </button>
+          )}
 
-          <PlayerFullScreen />
+          <div className="player__name">{film?.name}</div>
+
+          <button type="button" className="player__full-screen" onClick={handleClickFullScreen}>
+            <svg viewBox="0 0 27 27" width="27" height="27">
+              <use xlinkHref="#full-screen"></use>
+            </svg>
+            <span>Full screen</span>
+          </button>
         </div>
       </div>
     </div>

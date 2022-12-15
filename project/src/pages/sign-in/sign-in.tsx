@@ -7,6 +7,7 @@ import { AppRoute, AuthorizationStatus } from '../../const';
 import { Navigate } from 'react-router-dom';
 import { getAuthorizationStatus } from '../../store/user-process/selectors';
 import Footer from '../../components/footer/footer';
+import { resetMainScreen } from '../../store/main-data/main-data';
 
 function SignIn(): JSX.Element {
   const authStatus = useAppSelector(getAuthorizationStatus);
@@ -17,6 +18,7 @@ function SignIn(): JSX.Element {
   const dispatch = useAppDispatch();
 
   const onSubmit = (authData: AuthData) => {
+    dispatch(resetMainScreen());
     dispatch(loginAction(authData));
   };
 
