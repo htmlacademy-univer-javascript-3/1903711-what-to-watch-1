@@ -1,10 +1,10 @@
 import PromoCard from '../../components/promo-card/promo-card';
 import FilmList from '../../components/film-list/film-list';
-import {useAppDispatch, useAppSelector} from '../../hooks';
-import {useEffect} from 'react';
-import {getAuthorizationStatus} from '../../store/user-process/selectors';
-import {AuthorizationStatus} from '../../const';
-import {fetchFavoriteFilmsAction} from '../../store/api-actions';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { useEffect } from 'react';
+import { getAuthorizationStatus } from '../../store/user-process/selectors';
+import { AuthorizationStatus } from '../../const';
+import { fetchFavouriteFilmsAction } from '../../store/api-actions';
 import Footer from '../../components/footer/footer';
 
 function Main(): JSX.Element {
@@ -13,7 +13,7 @@ function Main(): JSX.Element {
 
   useEffect(() => {
     if (authStatus === AuthorizationStatus.Auth) {
-      dispatch(fetchFavoriteFilmsAction());
+      dispatch(fetchFavouriteFilmsAction());
     }
   }, [authStatus, dispatch]);
 

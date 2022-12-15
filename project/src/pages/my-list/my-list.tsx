@@ -3,7 +3,7 @@ import UserBlock from '../../components/user-block/user-block';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getFavouriteFilms, getLoadedDataStatus } from '../../store/main-data/selectors';
 import { useEffect } from 'react';
-import { fetchFavoriteFilmsAction } from '../../store/api-actions';
+import { fetchFavouriteFilmsAction } from '../../store/api-actions';
 import { getAuthorizationStatus } from '../../store/user-process/selectors';
 import { AuthorizationStatus } from '../../const';
 import LoadingScreen from '../loading-screen/loading-screen';
@@ -19,7 +19,7 @@ function MyList(): JSX.Element {
 
   useEffect(() => {
     if (authStatus === AuthorizationStatus.Auth) {
-      dispatch(fetchFavoriteFilmsAction());
+      dispatch(fetchFavouriteFilmsAction());
     }
   }, [authStatus, dispatch]);
 

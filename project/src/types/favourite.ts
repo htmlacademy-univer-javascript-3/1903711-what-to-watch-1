@@ -1,4 +1,4 @@
-type Favorite ={
+type Favourite ={
   id: number
   name: string
   posterImage: string
@@ -15,7 +15,7 @@ type Favorite ={
   runTime: number
   genre: string
   released: number
-  isFavorite: boolean
+  isFavourite: boolean
 }[];
 
-export default Favorite;
+export default Favourite;

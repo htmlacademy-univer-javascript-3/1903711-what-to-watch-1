@@ -1,9 +1,9 @@
-import {ALL_GENRES} from '../../const';
-import {useAppDispatch, useAppSelector} from '../../hooks';
-import {MouseEvent, useState} from 'react';
-import {getAllGenres} from '../../utils/get-all-genres';
-import {getFilms} from '../../store/main-data/selectors';
-import {changeGenre} from '../../store/main-data/main-data';
+import { ALL_GENRES } from '../../const';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { MouseEvent, useState } from 'react';
+import { getAllGenres } from '../../utils/get-all-genres';
+import { getFilms } from '../../store/main-data/selectors';
+import { changeGenre } from '../../store/main-data/main-data';
 
 function GenresFilter(): JSX.Element {
   const [currentGenre, setCurrentGenre] = useState(ALL_GENRES);

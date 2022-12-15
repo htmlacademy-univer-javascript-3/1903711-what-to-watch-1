@@ -1,13 +1,8 @@
-import {createSlice} from '@reduxjs/toolkit';
-import {FilmPageTabs, NameSpace} from '../../const';
-import {
-  changeFilmStatusToView,
-  fetchCommentsByID,
-  fetchFilmByID,
-  fetchSimilarByID
-} from '../api-actions';
-import {FilmData} from '../../types/film-data';
-//import {processErrorHandle} from '../../services/process-error-handle';
+import { createSlice } from '@reduxjs/toolkit';
+import { FilmPageTabs, NameSpace } from '../../const';
+import { changeFilmStatusToView, fetchCommentsByID, fetchFilmByID, fetchSimilarByID } from '../api-actions';
+import { FilmData } from '../../types/film-data';
+import { processErrorHandle } from '../../services/process-error-handle';
 
 const initialState: FilmData = {
   film: null,
@@ -54,7 +49,7 @@ export const filmData = createSlice({
         state.film = action.payload;
       })
       .addCase(changeFilmStatusToView.rejected, (state, action) => {
-        //processErrorHandle('ERROR');
+        processErrorHandle('ERROR');
       });
   }
 });

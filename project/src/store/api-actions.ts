@@ -15,8 +15,8 @@ import { UserComment } from '../types/user-comment';
 import Promo from '../types/promo';
 import { setError } from './app-process/app-process';
 import { FilmStatus } from '../types/film-status';
-import Favorite from '../types/favorite';
 import { dropAvatarURL } from '../services/avatar';
+import Favourite from '../types/favourite';
 
 export const clearErrorAction = createAsyncThunk(
   'app/clearError',
@@ -169,14 +169,14 @@ export const changePromoStatusToView = createAsyncThunk<Film, FilmStatus, {
   },
 );
 
-export const fetchFavoriteFilmsAction = createAsyncThunk<Favorite, undefined, {
+export const fetchFavouriteFilmsAction = createAsyncThunk<Favourite, undefined, {
   dispatch: AppDispatch,
   state: State,
   extra: AxiosInstance
 }>(
-  'data/fetchFavoriteFilmsAction',
+  'data/fetchFavouriteFilmsAction',
   async (_arg, { dispatch, extra: api}) => {
-    const {data} = await api.get<Favorite>(ApiRoute.Favorite);
+    const {data} = await api.get<Favourite>(ApiRoute.Favorite);
 
     return data;
   },

@@ -1,4 +1,4 @@
-import {FilmPageTabs} from '../../const';
+import { FilmPageTabs } from '../../const';
 import FilmTabItem from '../film-tab-item/film-tab-item';
 
 type FilmTabsProps = {

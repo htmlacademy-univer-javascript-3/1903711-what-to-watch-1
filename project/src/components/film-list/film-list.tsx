@@ -1,9 +1,8 @@
-import {useAppSelector} from '../../hooks';
-
+import { useAppSelector } from '../../hooks';
 import GenresFilter from '../genres-filter/genres-filter';
 import FilmCard from '../film-card/film-card';
 import ShowMoreButton from '../show-more-button/show-more-button';
-import {getCardCount, getFilteredFilms} from '../../store/main-data/selectors';
+import { getCardCount, getFilteredFilms } from '../../store/main-data/selectors';
 
 function FilmList(): JSX.Element {
 

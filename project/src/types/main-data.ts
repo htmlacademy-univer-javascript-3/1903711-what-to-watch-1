@@ -1,6 +1,6 @@
 import Films from './films';
 import Promo from './promo';
-import Favorite from './favorite';
+import Favorite from './favourite';
 
 export type MainData = {
   films: Films,

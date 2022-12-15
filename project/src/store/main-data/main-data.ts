@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { DEFAULT_NUMBER, ALL_GENRES, NameSpace } from '../../const';
-import { changePromoStatusToView, fetchFavoriteFilmsAction, fetchFilmsAction, fetchPromoAction } from '../api-actions';
+import { changePromoStatusToView, fetchFavouriteFilmsAction, fetchFilmsAction, fetchPromoAction } from '../api-actions';
 import { filterFilmsByGenre } from '../../utils/filter-films-by-genre';
 import { MainData } from '../../types/main-data';
 
@@ -67,20 +67,16 @@ export const mainData = createSlice({
         state.promo = action.payload;
       })
 
-      .addCase(fetchFavoriteFilmsAction.pending, (state) => {
+      .addCase(fetchFavouriteFilmsAction.pending, (state) => {
         state.isDataLoaded = true;
       })
-      .addCase(fetchFavoriteFilmsAction.fulfilled, (state, action) => {
+      .addCase(fetchFavouriteFilmsAction.fulfilled, (state, action) => {
         state.favoriteFilms = action.payload;
         state.favoriteCount = action.payload.length;
         state.isDataLoaded = false;
       })
       .addCase(changePromoStatusToView.fulfilled, (state, action) => {
         state.promo = action.payload;
-
-      })
-      .addCase(changePromoStatusToView.rejected, (state, action) => {
-        //processErrorHandle('ERROR');
       });
   }
 });
