@@ -1,7 +1,7 @@
 import { ALL_GENRES } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { MouseEvent, useState } from 'react';
-import { getAllGenres } from '../../utils/get-all-genres';
+import { getAllGenres } from '../../utils/functions';
 import { getFilms } from '../../store/main-data/selectors';
 import { changeGenre } from '../../store/main-data/main-data';
 

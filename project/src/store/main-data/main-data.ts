@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { DEFAULT_NUMBER, ALL_GENRES, NameSpace } from '../../const';
 import { changeFilmStatusToView, changePromoStatusToView, fetchFavouriteFilmsAction, fetchFilmsAction, fetchPromoAction } from '../api-actions';
-import { filterFilmsByGenre } from '../../utils/filter-films-by-genre';
+import { filterFilmsByGenre } from '../../utils/functions';
 import { MainData } from '../../types/main-data';
 
 const initialState: MainData = {

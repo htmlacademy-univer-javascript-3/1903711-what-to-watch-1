@@ -1,4 +1,4 @@
-import convertTime from '../../utils/convert-time';
+import { convertTime } from '../../utils/functions';
 import { Fragment } from 'react';
 
 type DetailsProps = {

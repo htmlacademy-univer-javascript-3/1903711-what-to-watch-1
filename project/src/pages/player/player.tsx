@@ -1,5 +1,6 @@
 import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { PlayerFullScreen } from '../../components/player-full-screen/player-full-screen';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchFilmByID } from '../../store/api-actions';
 import { getFilm, getIsFilmFoundStatus, getIsFilmLoadingStatus } from '../../store/film-data/selectors';
@@ -38,10 +39,6 @@ function Player(): JSX.Element {
   const handleClickPause = () => {
     player.current.pause();
     setPlaying(false);
-  };
-
-  const handleClickFullScreen = () => {
-    player.current.requestFullscreen();
   };
 
   if(player.current) {
@@ -102,13 +99,7 @@ function Player(): JSX.Element {
           )}
 
           <div className="player__name">{film?.name}</div>
-
-          <button type="button" className="player__full-screen" onClick={handleClickFullScreen}>
-            <svg viewBox="0 0 27 27" width="27" height="27">
-              <use xlinkHref="#full-screen"></use>
-            </svg>
-            <span>Full screen</span>
-          </button>
+          <PlayerFullScreen />
         </div>
       </div>
     </div>

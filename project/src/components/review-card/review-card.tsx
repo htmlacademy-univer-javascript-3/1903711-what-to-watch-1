@@ -1,4 +1,4 @@
-import convertDate from '../../utils/convert-date';
+import { convertDate } from '../../utils/functions';
 
 type ReviewCardProps = {
   comment: string,

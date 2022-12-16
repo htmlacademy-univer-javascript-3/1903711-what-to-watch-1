@@ -1,8 +1,8 @@
-import {Link} from 'react-router-dom';
-import {logoutAction} from '../../store/api-actions';
-import {useAppDispatch, useAppSelector} from '../../hooks';
-import {AppRoute, AuthorizationStatus} from '../../const';
-import {getAuthorizationStatus, getAvatarUrl} from '../../store/user-process/selectors';
+import { Link } from 'react-router-dom';
+import { logoutAction } from '../../store/api-actions';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { AppRoute, AuthorizationStatus } from '../../const';
+import { getAuthorizationStatus, getAvatarUrl } from '../../store/user-process/selectors';
 
 function UserBlock(): JSX.Element {
   const dispatch = useAppDispatch();
