@@ -1,4 +1,4 @@
-import convertRates from '../../utils/convert-rates';
+import { convertRates } from '../../utils/functions';
 
 type OverviewProps = {
   rating: number,

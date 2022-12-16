@@ -24,23 +24,21 @@ function FilmCard(props: FilmCardProps): JSX.Element {
       onMouseEnter={() => setIsPointed(true)}
       onMouseLeave={() => setIsPointed(false)}
     >
-      <div className="small-film-card__image">
-        {
-          isPointed ? <PreviewPlayer image={image} previewVideo={previewVideo} />
-            : <img src={image} alt={title} width="280" height="175"/>
-        }
-      </div>
-      <h3 className="small-film-card__title">
-        <Link
-          className="small-film-card__link"
-          to={`${AppRoute.Film}/${id}`}
-          onClick={() => {
-            dispatch(resetMainScreen());
-          }}
-        >
-          {title}
-        </Link>
-      </h3>
+      <Link
+        className="small-film-card__link"
+        to={`${AppRoute.Film}/${id}`}
+        onClick={() => {
+          dispatch(resetMainScreen());
+        }}
+      >
+        <div className="small-film-card__image">
+          {
+            isPointed ? <PreviewPlayer image={image} previewVideo={previewVideo} />
+              : <img src={image} alt={title} width="280" height="175"/>
+          }
+        </div>
+        <h3 className="small-film-card__title">{title}</h3>
+      </Link>
     </article>
   );
 }

@@ -1,5 +1,5 @@
-import {useAppDispatch} from '../../hooks';
-import {changeFilmTab} from '../../store/film-data/film-data';
+import { useAppDispatch } from '../../hooks';
+import { changeFilmTab } from '../../store/film-data/film-data';
 
 type TabProps = {
   currentTab: string,

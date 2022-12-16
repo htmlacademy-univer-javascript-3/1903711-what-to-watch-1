@@ -7,10 +7,6 @@ export const getAvatarURL = (): Token => {
   return token ?? '';
 };
 
-export const saveAvatarURL = (token: Token): void => {
-  localStorage.setItem(AUTH_AVATAR_URL, token);
-};
+export const saveAvatarURL = (token: Token): void => { localStorage.setItem(AUTH_AVATAR_URL, token); };
 
-export const dropAvatarURL = (): void => {
-  localStorage.removeItem(AUTH_AVATAR_URL);
-};
+export const dropAvatarURL = (): void => { localStorage.removeItem(AUTH_AVATAR_URL); };

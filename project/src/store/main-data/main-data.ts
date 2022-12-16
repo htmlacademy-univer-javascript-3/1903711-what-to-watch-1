@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { DEFAULT_NUMBER, ALL_GENRES, NameSpace } from '../../const';
-import { changePromoStatusToView, fetchFavoriteFilmsAction, fetchFilmsAction, fetchPromoAction } from '../api-actions';
-import { filterFilmsByGenre } from '../../utils/filter-films-by-genre';
+import { changeFilmStatusToView, changePromoStatusToView, fetchFavouriteFilmsAction, fetchFilmsAction, fetchPromoAction } from '../api-actions';
+import { filterFilmsByGenre } from '../../utils/functions';
 import { MainData } from '../../types/main-data';
 
 const initialState: MainData = {
@@ -46,9 +46,6 @@ export const mainData = createSlice({
     setIsDataLoaded: (state, action) => {
       state.isDataLoaded = action.payload;
     },
-    setFavouriteCount: (state, action) => {
-      state.favoriteCount = action.payload;
-    }
   },
   extraReducers(builder) {
     builder
@@ -67,20 +64,28 @@ export const mainData = createSlice({
         state.promo = action.payload;
       })
 
-      .addCase(fetchFavoriteFilmsAction.pending, (state) => {
+      .addCase(fetchFavouriteFilmsAction.pending, (state) => {
         state.isDataLoaded = true;
       })
-      .addCase(fetchFavoriteFilmsAction.fulfilled, (state, action) => {
+      .addCase(fetchFavouriteFilmsAction.fulfilled, (state, action) => {
         state.favoriteFilms = action.payload;
         state.favoriteCount = action.payload.length;
         state.isDataLoaded = false;
       })
       .addCase(changePromoStatusToView.fulfilled, (state, action) => {
         state.promo = action.payload;
-
+        if (action.payload.isFavorite) {
+          state.favoriteCount = state.favoriteCount + 1;
+        } else {
+          state.favoriteCount = state.favoriteCount - 1;
+        }
       })
-      .addCase(changePromoStatusToView.rejected, (state, action) => {
-        //processErrorHandle('ERROR');
+      .addCase(changeFilmStatusToView.fulfilled, (state, action) => {
+        if (action.payload.isFavorite) {
+          state.favoriteCount = state.favoriteCount + 1;
+        } else {
+          state.favoriteCount = state.favoriteCount - 1;
+        }
       });
   }
 });
@@ -89,5 +94,4 @@ export const {
   resetMainScreen,
   changeGenre,
   increaseCardCount,
-  setFavouriteCount
 } = mainData.actions;

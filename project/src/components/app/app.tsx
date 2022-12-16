@@ -9,7 +9,7 @@ import NotFound from '../../pages/not-found/not-found';
 import PrivateRoute from '../private-route/private-route';
 import LoadingScreen from '../../pages/loading-screen/loading-screen';
 import { useAppSelector } from '../../hooks';
-import { isCheckedAuth } from '../../utils/check-auth';
+import { isCheckedAuth } from '../../utils/functions';
 import { getAuthorizationStatus } from '../../store/user-process/selectors';
 import HistoryRouter from '../history-router/history-router';
 import { AppRoute } from '../../const';

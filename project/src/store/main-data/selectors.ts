@@ -2,7 +2,7 @@ import { NameSpace } from '../../const';
 import { State } from '../../types/state';
 import Films from '../../types/films';
 import Promo from '../../types/promo';
-import Favorite from '../../types/favorite';
+import Favorite from '../../types/favourite';
 
 export const getFilms = (state: State): Films => state[NameSpace.MainScreen].films;
 export const getPromo = (state: State): Promo | null => state[NameSpace.MainScreen].promo;

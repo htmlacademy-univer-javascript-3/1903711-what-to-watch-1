@@ -1,5 +1,5 @@
-import convertTime from '../../utils/convert-time';
-import {Fragment} from 'react';
+import { convertTime } from '../../utils/functions';
+import { Fragment } from 'react';
 
 type DetailsProps = {
   director: string,

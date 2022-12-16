@@ -1,8 +1,8 @@
-import {State} from '../../types/state';
-import {NameSpace} from '../../const';
+import { State } from '../../types/state';
+import { NameSpace } from '../../const';
 import Film from '../../types/film';
 import Similar from '../../types/similar';
-import {Comments} from '../../types/comments';
+import { Comments } from '../../types/comments';
 
 export const getFilm = (state: State): Film | null => state[NameSpace.FilmScreen].film;
 export const getSimilar = (state: State): Similar => state[NameSpace.FilmScreen].similar;

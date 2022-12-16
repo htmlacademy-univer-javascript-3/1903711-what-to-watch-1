@@ -1,34 +1,15 @@
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
-import {useAppDispatch, useAppSelector} from '../../hooks';
-import {getFavouriteCount, getPromo} from '../../store/main-data/selectors';
-import {getAuthorizationStatus} from '../../store/user-process/selectors';
-import { FilmStatus } from '../../types/film-status';
-import { changePromoStatusToView } from '../../store/api-actions';
-import { setFavouriteCount } from '../../store/main-data/main-data';
-import { AuthorizationStatus } from '../../const';
+import { useAppSelector } from '../../hooks';
+import { getFavouriteCount, getPromo } from '../../store/main-data/selectors';
+import { getAuthorizationStatus } from '../../store/user-process/selectors';
+import { favouriteClickType } from '../../const';
+import FilmCardButtons from '../film-card-buttons/film-card-buttons';
 
 function PromoCard(): JSX.Element {
   const promo = useAppSelector(getPromo);
   const authStatus = useAppSelector(getAuthorizationStatus);
   const favouriteCount = useAppSelector(getFavouriteCount);
-
-  const dispatch = useAppDispatch();
-
-  const onAddFavouriteClick = () => {
-    const filmStatus: FilmStatus = {
-      filmId: promo?.id || NaN,
-      status: promo?.isFavorite ? 0 : 1
-    };
-
-    dispatch(changePromoStatusToView(filmStatus));
-
-    if (promo?.isFavorite) {
-      dispatch(setFavouriteCount(favouriteCount - 1));
-    } else {
-      dispatch(setFavouriteCount(favouriteCount + 1));
-    }
-  };
 
   if (!promo) {
     return <section className="film-card"></section>;
@@ -61,31 +42,13 @@ function PromoCard(): JSX.Element {
               <span className="film-card__year">{promo.released.toString()}</span>
             </p>
 
-            <div className="film-card__buttons">
-              <button className="btn btn--play film-card__button" type="button">
-                <svg viewBox="0 0 19 19" width="19" height="19">
-                  <use xlinkHref="#play-s"></use>
-                </svg>
-                <span>Play</span>
-              </button>
-              {
-                authStatus === AuthorizationStatus.Auth &&
-                <button
-                  className="btn btn--list film-card__button"
-                  type="button"
-                  onClick={onAddFavouriteClick}
-                >
-                  {
-                    promo?.isFavorite ? <span>✓</span> :
-                      <svg viewBox="0 0 19 20" width="19" height="20">
-                        <use xlinkHref="#add"></use>
-                      </svg>
-                  }
-                  <span>My list</span>
-                  <span className="film-card__count">{favouriteCount}</span>
-                </button>
-              }
-            </div>
+            <FilmCardButtons
+              id={promo.id}
+              authStatus={authStatus}
+              film={promo}
+              favouriteCount={favouriteCount}
+              favouriteType={favouriteClickType.Promo}
+            />
           </div>
         </div>
       </div>

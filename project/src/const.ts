@@ -27,7 +27,6 @@ export enum ApiRoute {
   Similar = '/similar',
   Comments = '/comments',
   Favorite = '/favorite'
-
 }
 
 export enum NameSpace {
@@ -35,6 +34,11 @@ export enum NameSpace {
   MainScreen = 'MAIN',
   FilmScreen = 'FILM',
   App ='APP'
+}
+
+export enum favouriteClickType {
+  Film = 'FILM',
+  Promo = 'PROMO'
 }
 
 export const ALL_GENRES = 'All genres';

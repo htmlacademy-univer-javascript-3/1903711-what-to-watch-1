@@ -1,18 +1,18 @@
 import { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import FilmCardButtons from '../../components/film-card-buttons/film-card-buttons';
+import Footer from '../../components/footer/footer';
 import Logo from '../../components/logo/logo';
 import SimilarList from '../../components/similar-list/similar-list';
 import TabsFilmDescription from '../../components/tabs-film-description/tabs-film-description';
 import UserBlock from '../../components/user-block/user-block';
-import { AppRoute, AuthorizationStatus, FilmPageTabs } from '../../const';
+import { AuthorizationStatus, favouriteClickType, FilmPageTabs } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { changeFilmStatusToView, fetchCommentsByID, fetchFavoriteFilmsAction, fetchFilmByID, fetchSimilarByID } from '../../store/api-actions';
+import { fetchCommentsByID, fetchFavouriteFilmsAction, fetchFilmByID, fetchSimilarByID } from '../../store/api-actions';
 import { changeFilmTab } from '../../store/film-data/film-data';
 import { getFilm, getIsFilmFoundStatus, getIsFilmLoadingStatus, getSimilar } from '../../store/film-data/selectors';
-import { setFavouriteCount } from '../../store/main-data/main-data';
 import { getFavouriteCount } from '../../store/main-data/selectors';
 import { getAuthorizationStatus } from '../../store/user-process/selectors';
-import { FilmStatus } from '../../types/film-status';
 import LoadingScreen from '../loading-screen/loading-screen';
 import NotFound from '../not-found/not-found';
 
@@ -23,24 +23,8 @@ function Film(): JSX.Element {
   const authStatus = useAppSelector(getAuthorizationStatus);
   const isFilmFoundStatus = useAppSelector(getIsFilmFoundStatus);
   const isFilmLoadingStatus = useAppSelector(getIsFilmLoadingStatus);
-  const favoriteCount = useAppSelector(getFavouriteCount);
-
+  const favouriteCount = useAppSelector(getFavouriteCount);
   const dispatch = useAppDispatch();
-
-  const onAddFavoriteClick = () => {
-    const filmStatus: FilmStatus = {
-      filmId: film?.id || NaN,
-      status: film?.isFavorite ? 0 : 1
-    };
-
-    dispatch(changeFilmStatusToView(filmStatus));
-
-    if (film?.isFavorite) {
-      dispatch(setFavouriteCount(favoriteCount - 1));
-    } else {
-      dispatch(setFavouriteCount(favoriteCount + 1));
-    }
-  };
 
   useEffect(() => {
     dispatch(changeFilmTab(FilmPageTabs.Overview));
@@ -49,7 +33,7 @@ function Film(): JSX.Element {
     dispatch(fetchSimilarByID(id.toString()));
 
     if (authStatus === AuthorizationStatus.Auth) {
-      dispatch(fetchFavoriteFilmsAction());
+      dispatch(fetchFavouriteFilmsAction());
     }
 
   }, [id, authStatus, dispatch]);
@@ -85,40 +69,13 @@ function Film(): JSX.Element {
                 <span className="film-card__year">{film?.released}</span>
               </p>
 
-              <div className="film-card__buttons">
-                <button className="btn btn--play film-card__button" type="button">
-                  <svg viewBox="0 0 19 19" width="19" height="19">
-                    <use xlinkHref="#play-s"></use>
-                  </svg>
-                  <span>Play</span>
-                </button>
-                {
-                  authStatus === AuthorizationStatus.Auth &&
-                  <button
-                    className="btn btn--list film-card__button"
-                    type="button"
-                    onClick={onAddFavoriteClick}
-                  >
-                    {
-                      film?.isFavorite ? <span>✓</span> :
-                        <svg viewBox="0 0 19 20" width="19" height="20">
-                          <use xlinkHref="#add"></use>
-                        </svg>
-                    }
-                    <span>My list</span>
-                    <span className="film-card__count">{favoriteCount}</span>
-                  </button>
-                }
-                {
-                  authStatus === AuthorizationStatus.Auth &&
-                  <Link
-                    to={`${AppRoute.Film}/${id}${AppRoute.AddReview}`}
-                    className="btn film-card__button"
-                  >
-                    Add review
-                  </Link>
-                }
-              </div>
+              <FilmCardButtons
+                id={id}
+                authStatus={authStatus}
+                film={film}
+                favouriteCount={favouriteCount}
+                favouriteType={favouriteClickType.Film}
+              />
             </div>
           </div>
         </div>
@@ -135,14 +92,7 @@ function Film(): JSX.Element {
 
       <div className="page-content">
         <SimilarList similar={similar} />
-
-        <footer className="page-footer">
-          <Logo isLightVersion />
-
-          <div className="copyright">
-            <p>© 2019 What to watch Ltd.</p>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </>
   );

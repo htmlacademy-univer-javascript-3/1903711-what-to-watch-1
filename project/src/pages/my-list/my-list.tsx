@@ -3,12 +3,12 @@ import UserBlock from '../../components/user-block/user-block';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getFavouriteFilms, getLoadedDataStatus } from '../../store/main-data/selectors';
 import { useEffect } from 'react';
-import { fetchFavoriteFilmsAction } from '../../store/api-actions';
+import { fetchFavouriteFilmsAction } from '../../store/api-actions';
 import { getAuthorizationStatus } from '../../store/user-process/selectors';
 import { AuthorizationStatus } from '../../const';
 import LoadingScreen from '../loading-screen/loading-screen';
-import SimpleFilmCard from '../../components/simple-film-card/simple-film-card';
 import Footer from '../../components/footer/footer';
+import FilmCard from '../../components/film-card/film-card';
 
 function MyList(): JSX.Element {
   const favourite = useAppSelector(getFavouriteFilms);
@@ -19,7 +19,7 @@ function MyList(): JSX.Element {
 
   useEffect(() => {
     if (authStatus === AuthorizationStatus.Auth) {
-      dispatch(fetchFavoriteFilmsAction());
+      dispatch(fetchFavouriteFilmsAction());
     }
   }, [authStatus, dispatch]);
 
@@ -42,7 +42,7 @@ function MyList(): JSX.Element {
         <h2 className="catalog__title visually-hidden">Catalog</h2>
 
         <div className="catalog__films-list">
-          {favourite.map((film) => <SimpleFilmCard key={film.id} id={film.id} title={film.name} image={film.previewImage}/>)}
+          {favourite.map((film) => <FilmCard key={film.id} id={film.id} title={film.name} image={film.previewImage} previewVideo={film.previewVideoLink} />)}
         </div>
       </section>
       <Footer />
